@@ -2,7 +2,24 @@
 
 A robust Spring Boot backend application for managing financial records with role-based access control (RBAC).
 
+## 🚀 Live Demo
+
+**Deployed Application**: [https://finance-kzfl.onrender.com](https://finance-kzfl.onrender.com)
+
+**Swagger UI**: [https://finance-kzfl.onrender.com/swagger-ui.html](https://finance-kzfl.onrender.com/swagger-ui.html)
+
+**Test Credentials**:
+- Admin: `admin` / `admin`
+- Analyst: `analyst` / `analyst`
+- Viewer: `viewer` / `viewer`
+
+**Quick Test**:
+```bash
+curl -u viewer:viewer https://finance-kzfl.onrender.com/api/v1/dashboard/summary
+```
+
 ## Table of Contents
+- [Live Demo](#-live-demo)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
@@ -76,12 +93,22 @@ src/main/java/com/finance/backend/
 
 ## Getting Started
 
-### Prerequisites
+### Option 1: Use the Live Demo
+
+The application is already deployed and ready to use:
+- **Base URL**: `https://finance-kzfl.onrender.com`
+- **Swagger UI**: `https://finance-kzfl.onrender.com/swagger-ui.html`
+
+No setup required! Just use the test credentials to start exploring.
+
+### Option 2: Run Locally
+
+#### Prerequisites
 
 - Java 21 (or Java 17)
 - Maven 3.6+
 
-### Running the Application
+#### Running the Application
 
 1. **Clone the repository** (or extract the project)
 
@@ -112,7 +139,10 @@ src/main/java/com/finance/backend/
 ## API Documentation
 
 ### Interactive Documentation
-Visit `http://localhost:8080/swagger-ui.html` for interactive API documentation with the ability to test endpoints directly.
+- **Live Demo**: [https://finance-kzfl.onrender.com/swagger-ui.html](https://finance-kzfl.onrender.com/swagger-ui.html)
+- **Local**: `http://localhost:8080/swagger-ui.html`
+
+Use the interactive Swagger UI to test endpoints directly with the provided test credentials.
 
 ### API Endpoints
 
@@ -135,6 +165,19 @@ Visit `http://localhost:8080/swagger-ui.html` for interactive API documentation 
 
 #### Create a Financial Record (ADMIN)
 ```bash
+# Live Demo
+curl -X POST https://finance-kzfl.onrender.com/api/v1/records \
+  -u admin:admin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1500.00,
+    "type": "INCOME",
+    "category": "Salary",
+    "transactionDate": "2026-04-01",
+    "notes": "Monthly salary"
+  }'
+
+# Local
 curl -X POST http://localhost:8080/api/v1/records \
   -u admin:admin \
   -H "Content-Type: application/json" \
@@ -149,12 +192,22 @@ curl -X POST http://localhost:8080/api/v1/records \
 
 #### Get Dashboard Summary (Any Role)
 ```bash
+# Live Demo
+curl -X GET https://finance-kzfl.onrender.com/api/v1/dashboard/summary \
+  -u viewer:viewer
+
+# Local
 curl -X GET http://localhost:8080/api/v1/dashboard/summary \
   -u viewer:viewer
 ```
 
 #### Filter Records (ANALYST/ADMIN)
 ```bash
+# Live Demo
+curl -X GET "https://finance-kzfl.onrender.com/api/v1/records?type=EXPENSE&startDate=2026-03-01&endDate=2026-03-31" \
+  -u analyst:analyst
+
+# Local
 curl -X GET "http://localhost:8080/api/v1/records?type=EXPENSE&startDate=2026-03-01&endDate=2026-03-31" \
   -u analyst:analyst
 ```
@@ -257,6 +310,24 @@ The application is pre-seeded with three users and 12 financial records for imme
 - Debug level for security events
 
 **Rationale**: Easier debugging, audit trail, production monitoring.
+
+## Deployment
+
+### Live Environment
+The application is deployed on Render at: [https://finance-kzfl.onrender.com](https://finance-kzfl.onrender.com)
+
+**Note**: The deployed instance uses an in-memory H2 database that resets periodically. This is intentional for demo purposes to ensure a clean state for reviewers.
+
+### Docker Deployment
+A `Dockerfile` is included for containerized deployment:
+
+```bash
+# Build the image
+docker build -t finance-backend .
+
+# Run the container
+docker run -p 8080:8080 finance-backend
+```
 
 ## Additional Notes
 
